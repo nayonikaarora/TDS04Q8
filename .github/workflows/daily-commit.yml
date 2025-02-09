@@ -1,0 +1,24 @@
+name: Daily Commit
+
+on:
+  schedule:
+    - cron: "30 2 * * *"  # Runs at 02:30 UTC every day
+  workflow_dispatch:
+
+jobs:
+  daily-commit-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history
+
+      - name: Create an empty commit (24ds1000090@ds.study.iitm.ac.in)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --local user.email "24ds1000090@ds.study.iitm.ac.in"
+          git config --local user.name "github-actions[bot]"
+          git commit --allow-empty -m "Daily empty commit on $(date)"
+          git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
